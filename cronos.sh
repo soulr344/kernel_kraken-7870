@@ -39,8 +39,8 @@ CR_KERNEL=$CR_DIR/arch/arm64/boot/Image
 # Compiled dtb by dtbtool
 CR_DTB=$CR_DIR/boot.img-dtb
 # Kernel Name and Version
-CR_VERSION=RC14
-CR_NAME=KRAKEN-Kernel
+CR_VERSION=RC1
+CR_NAME=AresKernel
 # Thread count
 CR_JOBS=$(nproc --ignore=1)
 # Target android version and platform (7/n/8/o/9/p)
@@ -48,8 +48,6 @@ CR_ANDROID=p
 CR_PLATFORM=9.0.0
 # Target ARCH
 CR_ARCH=arm64
-# Current Date
-CR_DATE=$(date +%Y%m%d)
 # Init build
 export CROSS_COMPILE=$CR_TC
 # General init
@@ -155,7 +153,7 @@ fi
 
 BUILD_IMAGE_NAME()
 {
-	CR_IMAGE_NAME=$CR_NAME-$CR_VERSION-$CR_VARIANT-$CR_DATE
+	CR_IMAGE_NAME=$CR_NAME-$CR_VERSION-$CR_VARIANT
 
   # Flashable_script
   if [ $CR_VARIANT = $CR_VARIANT_J530X-TREBLE ]; then
@@ -260,7 +258,7 @@ BUILD_OUT()
     echo "Kernel Image Size = $sizT Kb"
     echo "Boot Image   Size = $sizkT Kb"
     echo "Image Generated at $CR_PRODUCT/$CR_IMAGE_NAME.img"
-    echo "Zip Generated at $CR_PRODUCT/$CR_NAME-$CR_VERSION-$FL_VARIANT-$CR_DATE.zip"
+    echo "Zip Generated at $CR_PRODUCT/$CR_NAME-$CR_VERSION-$FL_VARIANT.zip"
     echo "Press Any key to end the script"
     echo "----------------------------------------------"
 }
@@ -352,7 +350,6 @@ PACK_FLASHABLE()
   sed -i 's/FL_NAME/ui_print("* '$CR_NAME'");/g' $FL_SCRIPT
   sed -i 's/FL_VERSION/ui_print("* '$CR_VERSION'");/g' $FL_SCRIPT
   sed -i 's/FL_VARIANT/ui_print("* For '$FL_VARIANT' ");/g' $FL_SCRIPT
-  sed -i 's/FL_DATE/ui_print("* Compiled at '$CR_DATE'");/g' $FL_SCRIPT
   echo " Copy Image to $FL_DEVICE"
   cp $CR_OUT/$CR_IMAGE_NAME.img $FL_DEVICE
   echo " Packing zip"
@@ -360,11 +357,11 @@ PACK_FLASHABLE()
   # TODO: support multi-compile
   # TODO: Conditional
   cd $FL_EXPORT
-  zip -r $CR_OUT/$CR_NAME-$CR_VERSION-$FL_VARIANT-$CR_DATE.zip .
+  zip -r $CR_OUT/$CR_NAME-$CR_VERSION-$FL_VARIANT.zip .
   cd $CR_DIR
   rm -rf $FL_EXPORT
   # Copy zip to production
-  cp $CR_OUT/$CR_NAME-$CR_VERSION-$FL_VARIANT-$CR_DATE.zip $CR_PRODUCT
+  cp $CR_OUT/$CR_NAME-$CR_VERSION-$FL_VARIANT.zip $CR_PRODUCT
   # Move out dir to BUILD_OUT
   # Respect CLEAN build rules
   BUILD_CLEAN
