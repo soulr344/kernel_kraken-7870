@@ -19,7 +19,7 @@
 # Main Dir
 CR_DIR=$(pwd)
 # Define toolchan path
-CR_TC=~/Android/Toolchains/gcc-arm-9.2-aarch64-linux-gnu/bin/aarch64-none-linux-gnu-
+CR_TC="$HOME/toolchains/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-"
 # Define proper arch and dir for dts files
 CR_DTS=arch/arm64/boot/dts
 CR_DTS_TREBLE=arch/arm64/boot/exynos7870_Treble.dtsi
@@ -42,7 +42,7 @@ CR_DTB=$CR_DIR/boot.img-dtb
 CR_VERSION=RC1
 CR_NAME=AresKernel
 # Thread count
-CR_JOBS=$(nproc --ignore=1)
+CR_JOBS=$(nproc)
 # Target android version and platform (7/n/8/o/9/p)
 CR_ANDROID=p
 CR_PLATFORM=9.0.0
@@ -105,24 +105,11 @@ FL_SCRIPT=$FL_EXPORT/META-INF/com/google/android/updater-script
 
 # Script functions
 
-read -p "Clean source (y/n) > " yn
-if [ "$yn" = "Y" -o "$yn" = "y" ]; then
-     echo "Clean Build"
-     CR_CLEAN="1"
-else
-     echo "Dirty Build"
-     CR_CLEAN="0"
-fi
+# Fuck cleaning on VM
+CR_CLEAN="0"
 
-# Treble / OneUI
-read -p "Variant? (1 (oneUI) | 2 (Treble) > " aud
-if [ "$aud" = "Treble" -o "$aud" = "2" ]; then
-     echo "Build Treble Variant"
-     CR_MODE="2"
-else
-     echo "Build OneUI Variant"
-     CR_MODE="1"
-fi
+# This mofo want treble
+CR_MODE="2"
 
 BUILD_CLEAN()
 {
@@ -372,10 +359,12 @@ clear
 echo "----------------------------------------------"
 echo "$CR_NAME $CR_VERSION Build Script"
 echo "----------------------------------------------"
-PS3='Please select your option (1-9): '
+ 
 menuvar=("SM-J530X" "SM-J730X" "SM-J710X" "SM-J701X" "SM-G610X" "SM-J600X" "SM-A600X" "Build_All" "Exit")
-select menuvar in "${menuvar[@]}"
-do
+
+
+ 
+menuvar="SM-G610X"
     case $menuvar in
         "SM-J530X")
             clear
@@ -402,7 +391,7 @@ do
             PACK_BOOT_IMG
             PACK_FLASHABLE
             BUILD_OUT
-            read -n1 -r key
+
             break
             ;;
         "SM-J730X")
@@ -431,7 +420,7 @@ do
             PACK_BOOT_IMG
             PACK_FLASHABLE
             BUILD_OUT
-            read -n1 -r key
+
             break
             ;;
         "SM-J710X")
@@ -461,7 +450,7 @@ do
             PACK_BOOT_IMG
             PACK_FLASHABLE
             BUILD_OUT
-            read -n1 -r key
+
             break
             ;;
         "SM-J701X")
@@ -489,7 +478,7 @@ do
             PACK_BOOT_IMG
             PACK_FLASHABLE
             BUILD_OUT
-            read -n1 -r key
+
             break
             ;;
         "SM-G610X")
@@ -517,7 +506,7 @@ do
             PACK_BOOT_IMG
             PACK_FLASHABLE
             BUILD_OUT
-            read -n1 -r key
+
             break
             ;;
         "SM-J600X")
@@ -545,7 +534,7 @@ do
             PACK_BOOT_IMG
             PACK_FLASHABLE
             BUILD_OUT
-            read -n1 -r key
+
             break
             ;;
         "SM-A600X")
@@ -573,7 +562,7 @@ do
             PACK_BOOT_IMG
             PACK_FLASHABLE
             BUILD_OUT
-            read -n1 -r key
+
             break
             ;;
         "Build_All")
@@ -757,7 +746,7 @@ do
             echo " "
             echo "Press Any key to end the script"
             echo "----------------------------------------------"
-            read -n1 -r key
+
             break
             ;;
         "Exit")
@@ -765,4 +754,3 @@ do
             ;;
         *) echo Invalid option.;;
     esac
-done
