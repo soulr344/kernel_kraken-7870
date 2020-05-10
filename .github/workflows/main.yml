@@ -1,0 +1,44 @@
+name: Kernel Build
+
+on:
+  push:
+    branches: [build* ]
+    
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Cache Toolchain
+      id: cache-toolchain
+      uses: actions/cache@v1
+      with:
+        path: ~/toolchains
+        key: ${{ runner.os }}-tc
+
+    - name: Setup the toolchain
+      if: steps.cache-toolchain.outputs.cache-hit != 'true'
+      run: bash ./builder toolchain
+
+    - name: Start the torture
+      run: bash ./kangros.sh build
+      
+    - name: Upload boot.img
+      uses: actions/upload-artifact@v2
+      with:
+       name: boot.img
+       path:  KRAKEN/Product/*.img
+
+    - name: Upload flashable zip
+      uses: actions/upload-artifact@v2
+      with:
+       name: Kraken_
+       path:  KRAKEN/Product/*.zip
+    
+     
+   
